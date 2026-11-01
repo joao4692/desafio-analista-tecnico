@@ -1,4 +1,7 @@
-# Cartões de Ônibus
+## Cartões de Ônibus
+
+[![Backend CI](https://github.com/joao4692/desafio-analista-tecnico/actions/workflows/backend-ci.yml/badge.svg?branch=develop)](https://github.com/joao4692/desafio-analista-tecnico/actions/workflows/backend-ci.yml)
+
 
 Sistema de cadastro de usuários e de seus cartões de ônibus, com API em Spring Boot e interface em Angular.
 
