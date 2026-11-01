@@ -1,0 +1,18 @@
+# Segredos: só o modelo .env.example vai para o Git
+.env
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Material da empresa: não publicar o enunciado do desafio
+docs/*.pdf
+
+
+# Regras de uso da IA: fora do repositório até decidir se serão publicadas
+docs/REGRAS-IA.md
