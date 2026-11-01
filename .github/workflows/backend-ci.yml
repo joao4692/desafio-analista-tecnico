@@ -1,0 +1,39 @@
+name: Backend CI
+
+# Roda nos PRs e nas branches principais, para a main só receber código testado.
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      # Compila e roda os testes. O Testcontainers usa o Docker que já vem no runner.
+      - name: Testar
+        run: ./mvnw -B verify
+
+      # Guarda o relatório do JaCoCo mesmo se algum teste falhar.
+      - name: Publicar cobertura
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cobertura-jacoco
+          path: backend/target/site/jacoco
+          if-no-files-found: ignore
