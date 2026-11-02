@@ -122,6 +122,20 @@ class UsuarioControllerTest {
     }
 
     @Test
+    void mensagensDeValidacaoDevemSairEmPortugues() throws Exception {
+        // Mesmo com o navegador pedindo inglês (Accept-Language: en), o idioma fixo da API vence.
+        mockMvc.perform(post("/api/usuarios")
+                        .header("Accept-Language", "en")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {"nome": "", "email": "ana@email.com", "senha": "senha123"}
+                                """))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.mensagem").value("nome: não deve estar em branco"));
+    }
+
+
+    @Test
     void criarComEmailDuplicadoDeveRetornar409() throws Exception {
         when(service.criar(any())).thenThrow(new ConflitoException("E-mail já cadastrado: ana@email.com"));
 

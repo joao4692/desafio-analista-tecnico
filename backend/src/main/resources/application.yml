@@ -26,5 +26,21 @@ spring:
     # Isso evita consultas "escondidas" no controller e tira o aviso que o Spring mostra ao subir.
     open-in-view: false
 
+  web:
+      # Idioma fixo da API: as mensagens de validação (@NotBlank, @Email...) saem em português,
+      # seja qual for o idioma do servidor ou do navegador de quem chama.
+      locale: pt_BR
+      locale-resolver: fixed
+
+
 server:
   port: 8080
+
+
+# Configurações próprias do projeto (não são do Spring), agrupadas em "app".
+app:
+  cors:
+    # Origens que podem chamar a API pelo navegador, separadas por vírgula.
+    # Em produção, defina CORS_ORIGENS_PERMITIDAS com a URL do front, sem mexer no código.
+    origens-permitidas: ${CORS_ORIGENS_PERMITIDAS:http://localhost:4200}
+

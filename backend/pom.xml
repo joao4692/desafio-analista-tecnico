@@ -51,6 +51,14 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-crypto</artifactId>
         </dependency>
+        <!-- Swagger UI + documentação OpenAPI gerada a partir dos controllers.
+     A 3.2.0 é a linha compatível com o Spring Boot 4.1. -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+
         <!-- Driver JDBC: permite que a aplicação se conecte ao PostgreSQL -->
         <dependency>
             <groupId>org.postgresql</groupId>
