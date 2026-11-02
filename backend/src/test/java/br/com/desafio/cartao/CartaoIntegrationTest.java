@@ -1,5 +1,6 @@
 package br.com.desafio.cartao;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import br.com.desafio.TestcontainersConfiguration;
 import br.com.desafio.cartao.domain.Cartao;
 import br.com.desafio.cartao.domain.TipoCartao;
@@ -40,6 +41,9 @@ class CartaoIntegrationTest {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     // Limpa ANTES e DEPOIS de cada teste, sempre cartões → usuários (por causa da chave estrangeira).
     // O "depois" protege as outras classes: o Spring reaproveita o mesmo contexto e o mesmo banco
     // entre os testes de integração. Se sobrassem cartões aqui, o deleteAll() de usuários
@@ -48,6 +52,27 @@ class CartaoIntegrationTest {
     void limparAntes() {
         limparBanco();
     }
+    // Cria no banco um gatilho que RECUSA apagar usuários: é uma falha real, no ponto exato,
+    // DEPOIS que o listener do cartão já apagou os cartões (ordem garantida pelo UsuarioService).
+    private void criarGatilhoQueImpedeApagarUsuario() {
+        jdbcTemplate.execute("""
+                CREATE OR REPLACE FUNCTION falha_simulada() RETURNS trigger AS $$
+                BEGIN
+                    RAISE EXCEPTION 'falha simulada ao apagar usuario';
+                END;
+                $$ LANGUAGE plpgsql
+                """);
+        jdbcTemplate.execute("""
+                CREATE TRIGGER trg_falha_simulada BEFORE DELETE ON usuario
+                FOR EACH ROW EXECUTE FUNCTION falha_simulada()
+                """);
+    }
+
+    private void removerGatilho() {
+        jdbcTemplate.execute("DROP TRIGGER IF EXISTS trg_falha_simulada ON usuario");
+        jdbcTemplate.execute("DROP FUNCTION IF EXISTS falha_simulada()");
+    }
+
 
     @AfterEach
     void limparDepois() {
@@ -146,19 +171,44 @@ class CartaoIntegrationTest {
     }
 
     @Test
-    void removerUsuarioComCartoesAindaRetorna409() throws Exception {
-        // Comportamento TEMPORÁRIO, registrado de propósito: a chave estrangeira da V2 barra a exclusão.
-        // No 7.3, o evento passa a apagar os cartões antes, e no 7.4 este teste é trocado
-        // por "remover o usuário remove os cartões".
+    void removerUsuarioDeveRemoverOsCartoesJunto() throws Exception {
+        // Desde o 7.3: o UsuarioRemovidoEvent apaga os cartões antes do usuário, na mesma transação.
         Long ana = criarUsuario("ana@email.com");
+        Long bia = criarUsuario("bia@email.com");
         criarCartao(1001L, ana);
+        criarCartao(1002L, ana);
+        criarCartao(1003L, bia);
 
         mockMvc.perform(delete("/api/usuarios/{id}", ana))
-                .andExpect(status().isConflict());
+                .andExpect(status().isNoContent());
 
-        assertThat(usuarioRepository.existsById(ana)).isTrue();
-        assertThat(cartaoRepository.count()).isEqualTo(1);
+        assertThat(usuarioRepository.existsById(ana)).isFalse();
+        // Só o cartão da Bia sobrou: os da Ana saíram, e os de outro usuário não foram tocados.
+        assertThat(cartaoRepository.findAll()).extracting(Cartao::getUsuarioId).containsExactly(bia);
     }
+
+    @Test
+    void falhaAoApagarUsuarioDeveDesfazerARemocaoDosCartoes() throws Exception {
+        Long ana = criarUsuario("ana@email.com");
+        criarCartao(1001L, ana);
+        criarCartao(1002L, ana);
+
+        criarGatilhoQueImpedeApagarUsuario();
+        try {
+            // O listener apaga os cartões, e em seguida o DELETE do usuário falha no gatilho.
+            // O handler devolve 500 (erro inesperado), e o Spring desfaz a transação inteira.
+            mockMvc.perform(delete("/api/usuarios/{id}", ana))
+                    .andExpect(status().isInternalServerError());
+        } finally {
+            // Sempre remove o gatilho, mesmo se o teste falhar: o banco é compartilhado com as outras classes.
+            removerGatilho();
+        }
+
+        // Rollback: o usuário continua lá E os 2 cartões que o listener tinha apagado voltaram.
+        assertThat(usuarioRepository.existsById(ana)).isTrue();
+        assertThat(cartaoRepository.count()).isEqualTo(2);
+    }
+
 
     private void limparBanco() {
         cartaoRepository.deleteAll();

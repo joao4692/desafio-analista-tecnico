@@ -1,5 +1,6 @@
 package br.com.desafio.usuario.controller;
 
+import br.com.desafio.cartao.api.CartaoResumo;
 import br.com.desafio.shared.exception.ConflitoException;
 import br.com.desafio.shared.exception.RecursoNaoEncontradoException;
 import br.com.desafio.usuario.dto.UsuarioResponse;
@@ -42,7 +43,7 @@ class UsuarioControllerTest {
     private UsuarioService service;
 
     private final UsuarioResponse ana =
-            new UsuarioResponse(1L, "Ana", "ana@email.com", LocalDateTime.of(2026, 11, 2, 10, 0));
+            new UsuarioResponse(1L, "Ana", "ana@email.com", LocalDateTime.of(2026, 11, 2, 10, 0), List.of());
 
     @Test
     void listarDeveRetornar200SemExporASenha() throws Exception {
@@ -61,6 +62,18 @@ class UsuarioControllerTest {
         mockMvc.perform(get("/api/usuarios/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value("ana@email.com"));
+    }
+
+    @Test
+    void buscarPorIdDeveIncluirOsCartoesNoJson() throws Exception {
+        var comCartao = new UsuarioResponse(1L, "Ana", "ana@email.com", LocalDateTime.of(2026, 11, 2, 10, 0),
+                List.of(new CartaoResumo(10L, 1001L, "Cartão da Ana", true, "ESTUDANTE")));
+        when(service.buscarPorId(1L)).thenReturn(comCartao);
+
+        mockMvc.perform(get("/api/usuarios/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.cartoes[0].numeroCartao").value(1001))
+                .andExpect(jsonPath("$.cartoes[0].tipoCartao").value("ESTUDANTE"));
     }
 
     @Test

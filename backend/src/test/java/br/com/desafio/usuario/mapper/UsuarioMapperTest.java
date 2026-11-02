@@ -1,5 +1,6 @@
 package br.com.desafio.usuario.mapper;
 
+import br.com.desafio.cartao.api.CartaoResumo;
 import br.com.desafio.usuario.domain.Usuario;
 import br.com.desafio.usuario.dto.UsuarioCreateRequest;
 import br.com.desafio.usuario.dto.UsuarioResponse;
@@ -8,6 +9,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.lang.reflect.RecordComponent;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -49,5 +51,20 @@ class UsuarioMapperTest {
         assertThat(UsuarioResponse.class.getRecordComponents())
                 .extracting(RecordComponent::getName)
                 .doesNotContain("senha");
+    }
+
+    @Test
+    void paraRespostaComCartoesDeveIncluirALista() {
+        Usuario usuario = new Usuario("Ana", "ana@email.com", "hash-bcrypt");
+        var cartao = new CartaoResumo(10L, 1001L, "Cartão da Ana", true, "COMUM");
+
+        assertThat(mapper.paraResposta(usuario, List.of(cartao)).cartoes()).containsExactly(cartao);
+    }
+
+    @Test
+    void paraRespostaSemCartoesDeveTrazerListaVaziaENaoNull() {
+        Usuario usuario = new Usuario("Ana", "ana@email.com", "hash-bcrypt");
+
+        assertThat(mapper.paraResposta(usuario).cartoes()).isNotNull().isEmpty();
     }
 }
