@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: backend
+
+  config:
+    # Lê o .env da raiz como se fosse um arquivo .properties, então não precisa dar "export" no terminal.
+    # "optional:" evita erro quando o arquivo não existe: no CI e no Docker (Etapa 9)
+    # as variáveis vêm do próprio ambiente.
+    # O caminho "../" parte da pasta backend/, onde o mvnw roda.
+    import: optional:file:../.env[.properties]
+
+  datasource:
+    # Host e porta têm valor padrão porque não são segredo; no Docker o host vira "postgres".
+    # Banco, usuário e senha NÃO têm padrão: sem o .env a aplicação falha na hora,
+    # em vez de subir com uma senha escrita no código.
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+
+  jpa:
+    hibernate:
+      # O esquema é do Flyway (migrações versionadas). O Hibernate só valida
+      # e acusa erro se uma entidade não bater com a tabela.
+      ddl-auto: validate
+    # Fecha a conexão com o banco ao sair do service, e não só no fim da requisição HTTP.
+    # Isso evita consultas "escondidas" no controller e tira o aviso que o Spring mostra ao subir.
+    open-in-view: false
+
+server:
+  port: 8080
