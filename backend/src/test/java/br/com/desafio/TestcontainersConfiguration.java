@@ -8,7 +8,7 @@ import org.testcontainers.utility.DockerImageName;
 
 // Configuração usada só nos testes: a aplicação real não sobe este container.
 @TestConfiguration(proxyBeanMethods = false)
-class TestcontainersConfiguration {
+public class  TestcontainersConfiguration {
 
     // @ServiceConnection passa a URL, o usuário e a senha do container para o Spring,
     // sem precisar configurar a conexão de teste em nenhum arquivo.
