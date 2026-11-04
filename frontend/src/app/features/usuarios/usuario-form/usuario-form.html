@@ -1,59 +1,61 @@
 <h1 class="h4 mb-3">{{ edicao() ? 'Editar usuário' : 'Novo usuário' }}</h1>
 
 <form [formGroup]="form" (ngSubmit)="salvar()" novalidate>
-  <div class="mb-3">
-    <label for="nome" class="form-label">Nome</label>
-    <input
-      id="nome"
-      class="form-control"
-      formControlName="nome"
-      autocomplete="name"
-      [class.is-invalid]="invalido('nome')"
-    />
-    @if (invalido('nome')) {
-      <div class="invalid-feedback">Informe o nome (até 120 caracteres).</div>
-    }
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-6">
+      <label for="nome" class="form-label">Nome</label>
+      <input
+        id="nome"
+        class="form-control"
+        formControlName="nome"
+        autocomplete="name"
+        [class.is-invalid]="invalido('nome')"
+      />
+      @if (invalido('nome')) {
+        <div class="invalid-feedback">Informe o nome (até 120 caracteres).</div>
+      }
+    </div>
+
+    <div class="col-12 col-md-6">
+      <label for="email" class="form-label">Email</label>
+      <input
+        id="email"
+        type="email"
+        inputmode="email"
+        class="form-control"
+        formControlName="email"
+        autocomplete="email"
+        [class.is-invalid]="invalido('email')"
+      />
+      @if (invalido('email')) {
+        <div class="invalid-feedback">Informe um email válido.</div>
+      }
+    </div>
+
+    <div class="col-12 col-md-6">
+      <label for="senha" class="form-label">Senha</label>
+      <input
+        id="senha"
+        type="password"
+        class="form-control"
+        formControlName="senha"
+        autocomplete="new-password"
+        [class.is-invalid]="invalido('senha')"
+        [attr.aria-describedby]="edicao() ? 'senha-ajuda' : null"
+      />
+      @if (invalido('senha')) {
+        <div class="invalid-feedback">A senha deve ter entre 6 e 72 caracteres.</div>
+      }
+      @if (edicao()) {
+        <div id="senha-ajuda" class="form-text">Deixe em branco para manter a senha atual.</div>
+      }
+    </div>
   </div>
 
-  <div class="mb-3">
-    <label for="email" class="form-label">Email</label>
-    <input
-      id="email"
-      type="email"
-      inputmode="email"
-      class="form-control"
-      formControlName="email"
-      autocomplete="email"
-      [class.is-invalid]="invalido('email')"
-    />
-    @if (invalido('email')) {
-      <div class="invalid-feedback">Informe um email válido.</div>
-    }
-  </div>
-
-  <div class="mb-4">
-    <label for="senha" class="form-label">Senha</label>
-    <input
-      id="senha"
-      type="password"
-      class="form-control"
-      formControlName="senha"
-      autocomplete="new-password"
-      [class.is-invalid]="invalido('senha')"
-      [attr.aria-describedby]="edicao() ? 'senha-ajuda' : null"
-    />
-    @if (invalido('senha')) {
-      <div class="invalid-feedback">A senha deve ter entre 6 e 72 caracteres.</div>
-    }
-    @if (edicao()) {
-      <div id="senha-ajuda" class="form-text">Deixe em branco para manter a senha atual.</div>
-    }
-  </div>
-
-  <div class="d-grid gap-2">
-    <button type="submit" class="btn btn-primary" [disabled]="salvando()">
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <button type="submit" class="btn btn-primary px-md-4 order-md-2" [disabled]="salvando()">
       {{ salvando() ? 'Salvando...' : 'Salvar' }}
     </button>
-    <a class="btn btn-outline-secondary" routerLink="/usuarios">Cancelar</a>
+    <a class="btn btn-outline-secondary order-md-1" routerLink="/usuarios">Cancelar</a>
   </div>
 </form>

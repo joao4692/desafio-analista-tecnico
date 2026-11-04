@@ -94,4 +94,38 @@ describe('UsuarioLista', () => {
     expect(usuarioService.remover).not.toHaveBeenCalled();
     expect(cards()).toHaveLength(2);
   });
+
+  describe('a partir de md', () => {
+    const linhas = () => Array.from(elemento.querySelectorAll('tbody tr'));
+
+    it('mostra os usuários numa tabela, escondida no celular', async () => {
+      await criar(usuarios);
+
+      const tabela = elemento.querySelector('.table-responsive')!;
+      expect(tabela.classList).toContain('d-none');
+      expect(tabela.classList).toContain('d-md-block');
+
+      expect(linhas()).toHaveLength(2);
+      expect(linhas()[1].textContent).toContain('bruno@email.com');
+      expect(linhas()[1].textContent).toContain('2 cartões');
+    });
+
+    it('remove pela tabela também', async () => {
+      await criar(usuarios);
+      vi.spyOn(window, 'confirm').mockReturnValue(true);
+
+      linhas()[0].querySelector<HTMLButtonElement>('.btn-outline-danger')!.click();
+      await fixture.whenStable();
+
+      expect(usuarioService.remover).toHaveBeenCalledWith(1);
+      expect(linhas()).toHaveLength(1);
+      expect(cards()).toHaveLength(1);
+    });
+
+    it('não mostra a tabela vazia', async () => {
+      await criar([]);
+
+      expect(elemento.querySelector('table')).toBeNull();
+    });
+  });
 });

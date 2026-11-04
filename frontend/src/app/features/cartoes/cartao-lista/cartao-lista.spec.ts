@@ -155,5 +155,36 @@ describe('CartaoLista', () => {
     await criar([]);
 
     expect(elemento.textContent).toContain('Nenhum cartão encontrado.');
+    expect(elemento.querySelector('table')).toBeNull();
+  });
+
+  describe('a partir de md', () => {
+    const linhas = () => Array.from(elemento.querySelectorAll('tbody tr'));
+
+    it('mostra os cartões numa tabela, escondida no celular', async () => {
+      await criar();
+
+      const tabela = elemento.querySelector('.table-responsive')!;
+      expect(tabela.classList).toContain('d-none');
+      expect(tabela.classList).toContain('d-md-block');
+      expect(elemento.querySelector('.d-md-none')!.querySelectorAll('.card')).toHaveLength(2);
+
+      expect(linhas()).toHaveLength(2);
+      expect(linhas()[1].textContent).toContain('222');
+      expect(linhas()[1].textContent).toContain('Bruno');
+      expect(linhas()[1].textContent).toContain('Estudante');
+    });
+
+    it('também ativa o cartão pelo switch da tabela', async () => {
+      await criar();
+      cartaoService.alterarStatus.mockReturnValue(of({ ...cartoes[1], status: true }));
+
+      switchDo(linhas()[1]).click();
+      await fixture.whenStable();
+
+      expect(cartaoService.alterarStatus).toHaveBeenCalledWith(11, true);
+      expect(linhas()[1].textContent).toContain('Ativo');
+      expect(cards()[1].textContent).toContain('Ativo');
+    });
   });
 });

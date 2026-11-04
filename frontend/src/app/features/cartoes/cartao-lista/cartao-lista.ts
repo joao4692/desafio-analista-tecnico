@@ -5,11 +5,12 @@ import { Cartao } from '../../../models/cartao';
 import { ROTULO_TIPO_CARTAO } from '../../../models/tipo-cartao';
 import { Usuario } from '../../../models/usuario';
 import { AlertaService } from '../../../shared/alerta/alerta.service';
+import { Carregando } from '../../../shared/carregando/carregando';
 import { UsuarioService } from '../../usuarios/usuario.service';
 import { CartaoService } from '../cartao.service';
 
 @Component({
-  imports: [RouterLink],
+  imports: [RouterLink, Carregando],
   selector: 'app-cartao-lista',
   styleUrl: './cartao-lista.scss',
   templateUrl: './cartao-lista.html',
