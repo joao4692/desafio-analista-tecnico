@@ -29,5 +29,11 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/cartoes/cartao-lista/cartao-lista').then((m) => m.CartaoLista),
   },
+  {
+    path: 'cartoes/novo',
+    title: 'Novo cartão | Cartões de Ônibus',
+    loadComponent: () =>
+      import('./features/cartoes/cartao-form/cartao-form').then((m) => m.CartaoForm),
+  },
   { path: '**', redirectTo: 'usuarios' },
 ];
