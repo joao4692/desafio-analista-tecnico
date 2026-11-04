@@ -1,0 +1,41 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container">
+    <a class="navbar-brand" routerLink="/usuarios" (click)="fecharMenu()">Cartões de Ônibus</a>
+
+    <button
+      type="button"
+      class="navbar-toggler"
+      aria-controls="menu-principal"
+      aria-label="Abrir ou fechar o menu"
+      [attr.aria-expanded]="menuAberto()"
+      (click)="alternarMenu()"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="menu-principal" class="collapse navbar-collapse" [class.show]="menuAberto()">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/usuarios"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            (click)="fecharMenu()"
+            >Usuários</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            routerLink="/cartoes"
+            routerLinkActive="active"
+            ariaCurrentWhenActive="page"
+            (click)="fecharMenu()"
+            >Cartões</a
+          >
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
