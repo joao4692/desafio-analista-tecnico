@@ -1,0 +1,43 @@
+name: Frontend CI
+
+# Mesmas regras do back: roda nos PRs e nas branches principais.
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+jobs:
+  # Nome diferente de "build" (o job do back), para os dois checks aparecerem separados no PR.
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          # O lock fica em frontend/, e não na raiz.
+          cache-dependency-path: frontend/package-lock.json
+
+      # npm ci instala exatamente as versões do package-lock.json, sem alterá-lo.
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      # O Vitest roda com jsdom, sem precisar de navegador no runner.
+      - name: Testar
+        run: npm test -- --watch=false
+
+      # Garante que o projeto compila para produção.
+      - name: Build
+        run: npm run build
