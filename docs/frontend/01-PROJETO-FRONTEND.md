@@ -148,5 +148,5 @@ Os detalhes do back-end estão em `docs/backend/01-PROJETO-BACKEND.md`.
 - O `proxy.conf.json` repassa `/api` para `http://localhost:8080`. Assim, o tablet só fala com o Angular, e o back continua exposto apenas em `127.0.0.1`.
 - O `apiUrl` é sempre relativo (`/api`), em dev e no Docker, então o mesmo código funciona no PC, no tablet e no nginx.
 - O IP do PC vem do roteador (DHCP) e pode mudar: conferir com `hostname -I`.
-- Se o `ufw` bloquear, liberar só a rede de casa: `sudo ufw allow from 192.168.0.0/24 to any port 4200 proto tcp`.
+- Se o `ufw` bloquear, liberar só a rede de casa: `sudo ufw allow from <REDE LOCAL> to any port 4200 proto tcp`.
 - Usar apenas na rede de casa, nunca em Wi-Fi público.

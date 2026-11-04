@@ -36,7 +36,7 @@ Branch: `feature/front-esqueleto`
 - ✅ Passo 1.3: Instalar o Bootstrap 5 e configurá-lo no `angular.json` / `styles.scss` `[concluído]`
 - ✅ Passo 1.4: Adicionar o ESLint (`ng add angular-eslint`) `[concluído]`
 - ✅ Passo 1.5: Criar as pastas `core/`, `shared/`, `models/` e `features/`, os `environments` (`apiUrl: '/api'`) e o `proxy.conf.json`, e ajustar o `npm start` para `--host 0.0.0.0` com o proxy `[concluído]`
-- ✅ Passo 1.6: Rodar `npm start` e `ng test` com sucesso, e abrir no tablet em `http://192.168.0.29:4200` `[concluído]`
+- ✅ Passo 1.6: Rodar `npm start` e `ng test` com sucesso, e abrir no tablet em `http://<IP-da-máquina>:4200` `[concluído]`
 
 ---
 
