@@ -3,10 +3,11 @@ import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { Usuario } from '../../../models/usuario';
 import { AlertaService } from '../../../shared/alerta/alerta.service';
+import { Carregando } from '../../../shared/carregando/carregando';
 import { UsuarioService } from '../usuario.service';
 
 @Component({
-  imports: [RouterLink],
+  imports: [RouterLink, Carregando],
   selector: 'app-usuario-lista',
   styleUrl: './usuario-lista.scss',
   templateUrl: './usuario-lista.html',

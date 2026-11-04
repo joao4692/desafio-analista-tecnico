@@ -4,26 +4,77 @@
 </div>
 
 @if (carregando()) {
-  <p class="text-body-secondary">Carregando...</p>
+  <app-carregando texto="Carregando usuários..." />
+} @else if (usuarios().length === 0) {
+  <div class="text-center text-body-secondary border rounded py-5">
+    <p class="mb-3">Nenhum usuário cadastrado.</p>
+    <a class="btn btn-outline-primary" routerLink="/usuarios/novo">Cadastrar o primeiro</a>
+  </div>
 } @else {
-  @for (usuario of usuarios(); track usuario.id) {
-    <div class="card mb-2">
-      <div class="card-body">
-        <h2 class="h6 card-title mb-1">{{ usuario.nome }}</h2>
-        <p class="card-text text-body-secondary text-break mb-2">{{ usuario.email }}</p>
-        <span class="badge text-bg-secondary">{{ textoCartoes(usuario.cartoes.length) }}</span>
+  <!-- Celular e tablet em pé: cards -->
+  <div class="d-md-none">
+    @for (usuario of usuarios(); track usuario.id) {
+      <div class="card mb-2">
+        <div class="card-body">
+          <h2 class="h6 card-title mb-1">{{ usuario.nome }}</h2>
+          <p class="card-text text-body-secondary text-break mb-2">{{ usuario.email }}</p>
+          <span class="badge text-bg-secondary">{{ textoCartoes(usuario.cartoes.length) }}</span>
 
-        <div class="d-flex gap-2 mt-3">
-          <a class="btn btn-outline-primary flex-fill" [routerLink]="['/usuarios', usuario.id]"
-            >Editar</a
-          >
-          <button type="button" class="btn btn-outline-danger flex-fill" (click)="remover(usuario)">
-            Remover
-          </button>
+          <div class="d-flex gap-2 mt-3">
+            <a class="btn btn-outline-primary flex-fill" [routerLink]="['/usuarios', usuario.id]"
+              >Editar</a
+            >
+            <button
+              type="button"
+              class="btn btn-outline-danger flex-fill"
+              (click)="remover(usuario)"
+            >
+              Remover
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  } @empty {
-    <p class="text-body-secondary">Nenhum usuário cadastrado.</p>
-  }
+    }
+  </div>
+
+  <!-- A partir de md: tabela -->
+  <div class="table-responsive d-none d-md-block">
+    <table class="table table-hover align-middle">
+      <thead>
+        <tr>
+          <th scope="col">Nome</th>
+          <th scope="col">Email</th>
+          <th scope="col">Cartões</th>
+          <th scope="col" class="text-end">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (usuario of usuarios(); track usuario.id) {
+          <tr>
+            <td>{{ usuario.nome }}</td>
+            <td class="text-break">{{ usuario.email }}</td>
+            <td>
+              <span class="badge text-bg-secondary">{{
+                textoCartoes(usuario.cartoes.length)
+              }}</span>
+            </td>
+            <td class="text-end text-nowrap">
+              <a
+                class="btn btn-sm btn-outline-primary me-2"
+                [routerLink]="['/usuarios', usuario.id]"
+                >Editar</a
+              >
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-danger"
+                (click)="remover(usuario)"
+              >
+                Remover
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 }
