@@ -1,0 +1,13 @@
+// O switch do Bootstrap é pequeno para o dedo: aumenta a área de toque.
+.form-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+
+  .form-check-input {
+    width: 2.75rem;
+    height: 1.5rem;
+    margin-top: 0;
+  }
+}

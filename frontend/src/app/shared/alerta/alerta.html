@@ -1,0 +1,16 @@
+@if (alertas.mensagem(); as mensagem) {
+  <div
+    class="alert alert-dismissible d-flex align-items-center"
+    [class.alert-success]="mensagem.tipo === 'sucesso'"
+    [class.alert-danger]="mensagem.tipo === 'erro'"
+    role="alert"
+  >
+    <span class="flex-grow-1">{{ mensagem.texto }}</span>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Fechar mensagem"
+      (click)="alertas.fechar()"
+    ></button>
+  </div>
+}

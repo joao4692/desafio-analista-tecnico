@@ -40,7 +40,14 @@ services:
       postgres:
         condition: service_healthy
 
-
+  # Front em Angular servido pelo nginx, que também repassa /api para o backend.
+  frontend:
+    build: ./frontend
+    ports:
+      # Aberto na rede de propósito, para testar no celular ou no tablet pelo IP do PC.
+      - "${FRONTEND_PORTA:-80}:8080"
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:

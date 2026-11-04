@@ -1,0 +1,69 @@
+<h1 class="h4 mb-3">Novo cartão</h1>
+
+<form [formGroup]="form" (ngSubmit)="salvar()" novalidate>
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-6">
+      <label for="usuarioId" class="form-label">Usuário</label>
+      <select
+        id="usuarioId"
+        class="form-select"
+        formControlName="usuarioId"
+        [class.is-invalid]="invalido('usuarioId')"
+      >
+        <option [ngValue]="null" disabled>Selecione</option>
+        @for (usuario of usuarios(); track usuario.id) {
+          <option [ngValue]="usuario.id">{{ usuario.nome }}</option>
+        }
+      </select>
+      @if (invalido('usuarioId')) {
+        <div class="invalid-feedback">Escolha o dono do cartão.</div>
+      }
+    </div>
+
+    <div class="col-12 col-md-6">
+      <label for="numeroCartao" class="form-label">Número do cartão</label>
+      <input
+        id="numeroCartao"
+        type="number"
+        inputmode="numeric"
+        min="1"
+        class="form-control"
+        formControlName="numeroCartao"
+        [class.is-invalid]="invalido('numeroCartao')"
+      />
+      @if (invalido('numeroCartao')) {
+        <div class="invalid-feedback">Informe um número inteiro maior que zero.</div>
+      }
+    </div>
+
+    <div class="col-12 col-md-6">
+      <label for="nome" class="form-label">Nome do cartão</label>
+      <input
+        id="nome"
+        class="form-control"
+        formControlName="nome"
+        placeholder="Ex.: Cartão principal"
+        [class.is-invalid]="invalido('nome')"
+      />
+      @if (invalido('nome')) {
+        <div class="invalid-feedback">Informe o nome (até 120 caracteres).</div>
+      }
+    </div>
+
+    <div class="col-12 col-md-6">
+      <label for="tipoCartao" class="form-label">Tipo</label>
+      <select id="tipoCartao" class="form-select" formControlName="tipoCartao">
+        @for (tipo of tipos; track tipo) {
+          <option [ngValue]="tipo">{{ rotuloTipo[tipo] }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <button type="submit" class="btn btn-primary px-md-4 order-md-2" [disabled]="salvando()">
+      {{ salvando() ? 'Salvando...' : 'Salvar' }}
+    </button>
+    <a class="btn btn-outline-secondary order-md-1" routerLink="/cartoes">Cancelar</a>
+  </div>
+</form>
