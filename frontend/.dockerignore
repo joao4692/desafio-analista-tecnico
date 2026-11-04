@@ -1,0 +1,7 @@
+# O npm ci e o build acontecem dentro da imagem; os locais só deixariam o contexto maior.
+node_modules/
+dist/
+.angular/
+
+.vscode/
+README.md
