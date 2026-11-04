@@ -10,3 +10,10 @@
   align-items: center;
   justify-content: center;
 }
+
+// No desktop o clique é com o mouse: os botões pequenos das tabelas voltam ao tamanho do Bootstrap.
+@media (min-width: 768px) {
+  .btn-sm {
+    min-height: auto;
+  }
+}
