@@ -2,20 +2,19 @@
 
 [![Backend CI](https://github.com/joao4692/desafio-analista-tecnico/actions/workflows/backend-ci.yml/badge.svg?branch=develop)](https://github.com/joao4692/desafio-analista-tecnico/actions/workflows/backend-ci.yml)
 
-
 Sistema de cadastro de usuários e de seus cartões de ônibus, com API em Spring Boot e interface em Angular.
 
 > Projeto em desenvolvimento.
 
 ## Stack
 
-| Parte | Tecnologias |
-|---|---|
-| Back-end | Java 21, Spring Boot, Maven, Spring Data JPA, Flyway |
-| Banco de dados | PostgreSQL |
-| Testes | JUnit 5, Mockito, MockMvc, Testcontainers, JaCoCo |
-| Front-end | Angular, Bootstrap 5 |
-| Infraestrutura | Docker Compose, GitHub Actions |
+| Parte          | Tecnologias                                          |
+| -------------- | ---------------------------------------------------- |
+| Back-end       | Java 21, Spring Boot, Maven, Spring Data JPA, Flyway |
+| Banco de dados | PostgreSQL                                           |
+| Testes         | JUnit 5, Mockito, MockMvc, Testcontainers, JaCoCo    |
+| Front-end      | Angular, Bootstrap 5                                 |
+| Infraestrutura | Docker Compose, GitHub Actions                       |
 
 ## Como preparar o ambiente
 
@@ -32,3 +31,5 @@ docker compose up -d
 cd backend
 ./mvnw verify
 ```
+
+[![Frontend CI](https://github.com/joao4692/desafio-analista-tecnico/actions/workflows/frontend-ci.yml/badge.svg?branch=develop)](https://github.com/joao4692/desafio-analista-tecnico/actions/workflows/frontend-ci.yml)
