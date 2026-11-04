@@ -1,1 +1,29 @@
-<h1 class="h4">Usuários</h1>
+<div class="d-flex align-items-center justify-content-between gap-2 mb-3">
+  <h1 class="h4 mb-0">Usuários</h1>
+  <a class="btn btn-primary" routerLink="/usuarios/novo">Novo usuário</a>
+</div>
+
+@if (carregando()) {
+  <p class="text-body-secondary">Carregando...</p>
+} @else {
+  @for (usuario of usuarios(); track usuario.id) {
+    <div class="card mb-2">
+      <div class="card-body">
+        <h2 class="h6 card-title mb-1">{{ usuario.nome }}</h2>
+        <p class="card-text text-body-secondary text-break mb-2">{{ usuario.email }}</p>
+        <span class="badge text-bg-secondary">{{ textoCartoes(usuario.cartoes.length) }}</span>
+
+        <div class="d-flex gap-2 mt-3">
+          <a class="btn btn-outline-primary flex-fill" [routerLink]="['/usuarios', usuario.id]"
+            >Editar</a
+          >
+          <button type="button" class="btn btn-outline-danger flex-fill" (click)="remover(usuario)">
+            Remover
+          </button>
+        </div>
+      </div>
+    </div>
+  } @empty {
+    <p class="text-body-secondary">Nenhum usuário cadastrado.</p>
+  }
+}
