@@ -1,0 +1,8 @@
+# O build gera o target/ dentro do container; o local só deixaria o contexto maior.
+target/
+
+# Arquivos de IDE e de ajuda: não fazem parte da aplicação.
+.idea/
+.vscode/
+*.iml
+HELP.md

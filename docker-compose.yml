@@ -1,0 +1,46 @@
+services:
+  # Banco único do monólito modular. Os dados de conexão vêm do .env, nunca do código.
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?defina POSTGRES_DB no .env}
+      POSTGRES_USER: ${POSTGRES_USER:?defina POSTGRES_USER no .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}
+    ports:
+      # Só a própria máquina acessa o banco, sem expor a porta na rede.
+      - "127.0.0.1:5432:5432"
+    volumes:
+      # Volume nomeado: os dados continuam depois de recriar o container.
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      # Permite que o backend espere o banco ficar pronto na Etapa 9.
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # API do monólito. A imagem é gerada pelo Dockerfile do Passo 9.1.
+  backend:
+    build: ./backend
+    environment:
+      # Na rede do compose, cada serviço é encontrado pelo nome. Aqui o banco é "postgres", não "localhost".
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: "5432"
+      # Os mesmos valores do .env que o banco usa. Sem eles, o compose recusa a subida.
+      POSTGRES_DB: ${POSTGRES_DB:?defina POSTGRES_DB no .env}
+      POSTGRES_USER: ${POSTGRES_USER:?defina POSTGRES_USER no .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}
+      # Não é segredo: tem valor padrão para o front local.
+      CORS_ORIGENS_PERMITIDAS: ${CORS_ORIGENS_PERMITIDAS:-http://localhost:4200}
+    ports:
+      # Igual ao banco: só a própria máquina acessa a API (o navegador e o front local funcionam).
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      # Espera o healthcheck do postgres dar certo. Sem isso, o Flyway tentaria migrar antes de o banco aceitar conexões.
+      postgres:
+        condition: service_healthy
+
+
+
+volumes:
+  postgres_data:
