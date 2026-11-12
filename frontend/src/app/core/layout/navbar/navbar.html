@@ -1,6 +1,14 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <div class="container">
-    <a class="navbar-brand" routerLink="/usuarios" (click)="fecharMenu()">Cartões de Ônibus</a>
+    <a
+      class="navbar-brand marca d-flex align-items-center gap-2"
+      routerLink="/usuarios"
+      (click)="fecharMenu()"
+    >
+      <!-- alt vazio: o nome ao lado já identifica a marca para o leitor de tela. -->
+      <img class="marca-logo" src="logo.png" alt="" width="45" height="32" />
+      <span>Vale<span class="marca-destaque">IR</span></span>
+    </a>
 
     <button
       type="button"

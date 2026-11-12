@@ -8,3 +8,23 @@
   display: flex;
   align-items: center;
 }
+
+// Marca: logo e nome lado a lado, com a mesma área de toque dos links.
+.marca {
+  min-height: 44px;
+  font-size: 1.375rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+.marca-logo {
+  // Mantém a proporção do arquivo caso a altura mude.
+  width: auto;
+  height: 2rem;
+}
+
+// "Vale" mais leve e "IR" em destaque.
+.marca-destaque {
+  font-weight: 800;
+}
